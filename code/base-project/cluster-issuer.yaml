@@ -4,4 +4,4 @@ metadata:
   name: unoplat-service-mesh-issuer
 spec:
   ca:
-    secretName: linkerd-ca-secret
+    secretName: unoplat-service-mesh-ca-secret
