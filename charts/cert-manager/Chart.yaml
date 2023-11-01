@@ -19,7 +19,7 @@ maintainers:
 - email: cert-manager-maintainers@googlegroups.com
   name: cert-manager-maintainers
   url: https://cert-manager.io
-name: cert-manager
+name: unoplat-cert-manager
 sources:
 - https://github.com/cert-manager/cert-manager
 version: v1.14.1-dev
