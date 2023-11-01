@@ -10,6 +10,6 @@
   --create-namespace \
   --version v1.13.1 \
   --set installCRDs=true
-8. kubectl create secret tls unoplat-service-mesh-ca-secret --cert=root.crt --key=root.key -n unoplat-service-mesh
+8. kubectl create secret tls unoplat-service-mesh-ca-secret --cert=root.crt --key=decrypted.key -n unoplat-service-mesh
 9. kubectl create -f code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
 10. kubectl create -f code/base-project/certificate.yaml -n unoplat-service-mesh
