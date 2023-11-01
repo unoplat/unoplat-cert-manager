@@ -42,6 +42,15 @@ jobs:
       run: helm repo update
 
     - name: Install latest pre-release version
+      env:
+        ROOT_CRT: ${{ secrets.ROOT_CRT }}
+        DECRYPTED_ROOT_KEY: ${{ secrets.DECRYPTED_ROOT_KEY }}
+
       run: |
         version=$(helm search repo unoplat-cert-manager/cert-manager --versions --devel --output json | jq -r '.[0].version')
-        helm upgrade --install unoplat-cert-manager --namespace unoplat-service-mesh unoplat-cert-manager/cert-manager --version $version --devel --create-namespace
+        helm upgrade --install unoplat-cert-manager --namespace unoplat-service-mesh unoplat-cert-manager/cert-manager --set installCRDs=true --version $version --devel --create-namespace
+        kubectl create secret tls unoplat-service-mesh-ca-secret --cert="$ROOT_CRT" --key="$DECRYPTED_ROOT_KEY" -n unoplat-service-mesh
+        kubectl create -f code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
+        kubectl create -f code/base-project/certificate.yaml -n unoplat-service-mesh
+
+
