@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout our repository
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        fetch-depth: 0 
 
     - uses: azure/setup-kubectl@v3
       id: install    
@@ -51,7 +56,7 @@ jobs:
         version=$(helm search repo unoplat-cert-manager/cert-manager --versions --devel --output json | jq -r '.[0].version')
         helm upgrade --install cert-manager --namespace unoplat-service-mesh unoplat-cert-manager/cert-manager --set installCRDs=true --version $version --devel --create-namespace
         kubectl create secret tls unoplat-service-mesh-ca-secret --cert=root.crt --key=decrypted.key -n unoplat-service-mesh
-        kubectl create -f ${{ github.workspace }}/code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
-        kubectl create -f ${{ github.workspace }}/code/base-project/certificate.yaml -n unoplat-service-mesh
+        kubectl create -f code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
+        kubectl create -f code/base-project/certificate.yaml -n unoplat-service-mesh
 
 
