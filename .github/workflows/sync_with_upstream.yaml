@@ -1,4 +1,4 @@
-name: Update KubePrometheusStack
+name: Update Cert manager
 
 on:
   schedule:
