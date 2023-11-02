@@ -48,12 +48,10 @@ jobs:
       run: |
         echo "$ROOT_CRT" > root.crt
         echo "$DECRYPTED_ROOT_KEY" > decrypted.key
-        cat root.crt
-        cat decrypted.key
         version=$(helm search repo unoplat-cert-manager/cert-manager --versions --devel --output json | jq -r '.[0].version')
         helm upgrade --install cert-manager --namespace unoplat-service-mesh unoplat-cert-manager/cert-manager --set installCRDs=true --version $version --devel --create-namespace
         kubectl create secret tls unoplat-service-mesh-ca-secret --cert=root.crt --key=decrypted.key -n unoplat-service-mesh
-        kubectl create -f code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
-        kubectl create -f code/base-project/certificate.yaml -n unoplat-service-mesh
+        kubectl create -f ${{ github.workspace }}/code/base-project/cluster-issuer.yaml -n unoplat-service-mesh
+        kubectl create -f ${{ github.workspace }}/code/base-project/certificate.yaml -n unoplat-service-mesh
 
 
