@@ -1,5 +1,35 @@
 apiVersion: v1
 entries:
+  cert-manager:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/signKey: |
+        fingerprint: 1020CF3C033D4F35BAE1C19E1226061C665DF13E
+        url: https://cert-manager.io/public-keys/cert-manager-keyring-2021-09-20-1020CF3C033D4F35BAE1C19E1226061C665DF13E.gpg
+    apiVersion: v1
+    appVersion: v1.13.1
+    created: "2023-11-02T05:59:34.464033518Z"
+    description: A Helm chart for cert-manager
+    digest: 8ae43d864c18ef3fed276cf2ddbf526e970cfe48aa59bded6304ee02e4e9de00
+    home: https://github.com/cert-manager/cert-manager
+    icon: https://raw.githubusercontent.com/cert-manager/cert-manager/d53c0b9270f8cd90d908460d69502694e1838f5f/logo/logo-small.png
+    keywords:
+    - cert-manager
+    - kube-lego
+    - letsencrypt
+    - tls
+    kubeVersion: '>= 1.22.0-0'
+    maintainers:
+    - email: cert-manager-maintainers@googlegroups.com
+      name: cert-manager-maintainers
+      url: https://cert-manager.io
+    name: cert-manager
+    sources:
+    - https://github.com/cert-manager/cert-manager
+    urls:
+    - https://github.com/unoplat/unoplat-cert-manager/releases/download/cert-manager-v1.14.2-dev/cert-manager-v1.14.2-dev.tgz
+    version: v1.14.2-dev
   unoplat-cert-manager:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -30,4 +60,4 @@ entries:
     urls:
     - https://github.com/unoplat/unoplat-cert-manager/releases/download/unoplat-cert-manager-v1.14.1-dev/unoplat-cert-manager-v1.14.1-dev.tgz
     version: v1.14.1-dev
-generated: "2023-11-01T12:42:06.033578274Z"
+generated: "2023-11-02T05:59:34.464045518Z"
