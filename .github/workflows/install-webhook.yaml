@@ -45,8 +45,9 @@ jobs:
       env:
         ROOT_CRT: ${{ secrets.ROOT_CRT }}
         DECRYPTED_ROOT_KEY: ${{ secrets.DECRYPTED_ROOT_KEY }}
-
       run: |
+        echo $ROOT_CRT
+        echo $DECRYPTED_ROOT_KEY
         version=$(helm search repo unoplat-cert-manager/cert-manager --versions --devel --output json | jq -r '.[0].version')
         helm upgrade --install cert-manager --namespace unoplat-service-mesh unoplat-cert-manager/cert-manager --set installCRDs=true --version $version --devel --create-namespace
         kubectl create secret tls unoplat-service-mesh-ca-secret --cert="$ROOT_CRT" --key="$DECRYPTED_ROOT_KEY" -n unoplat-service-mesh
