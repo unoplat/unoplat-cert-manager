@@ -1,7 +1,5 @@
 name: Develop Branch Action
 
-# todo: add container vulnerability scan
-
 on:
   pull_request_target:
     types: [opened]
