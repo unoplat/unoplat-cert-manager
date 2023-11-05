@@ -63,7 +63,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Fetch signoz images with specified tag
+    - name: Fetch cert manager images with specified tag
       run: |
         docker pull ${{ env.CERT_MANAGER_IMAGE }}
         docker pull ${{ env.CERT_MANAGER_WEBHOOK_IMAGE }}
