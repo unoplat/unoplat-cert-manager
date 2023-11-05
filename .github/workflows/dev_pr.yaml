@@ -30,39 +30,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
-    - uses: kubescape/github-action@main
-      continue-on-error: true
-      with:
-        format: sarif
-        outputFile: helm_results
-        files: "charts/cert-manager"         
-
-    - name: Upload Kubescape scan results to Github Code Scanning
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: helm_results.sarif  
-        category: "Kubescape scan for Helm Charts"
-
-    - name: Moving scan results to appropriate folders
-      run: |
-        TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
-        echo "Moving helm_results.sarif to reports/kubernetes-nsa-cisa-yaml-scan-analysis/helm_results_${TIMESTAMP}.sarif"
-        mv -f "helm_results.sarif" "reports/kubernetes-nsa-cisa-yaml-scan-analysis/helm_results_${TIMESTAMP}.sarif"
-
-
-    - name: Push changes to our repository
-      run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        git pull origin
-        git add charts/*
-        git add reports/*
-        git commit -m "added charts and scan results"
-        echo ${{ github.head_ref }}
-        git push origin ${{ github.head_ref }}
-      
-    - name: Install yq
+        - name: Install yq
       run: |
         sudo snap install yq
         
@@ -171,3 +139,35 @@ jobs:
       with:
         sarif_file: 'startup_api_check.sarif'
         category: "Container scan for startup_api_check"
+
+    - uses: kubescape/github-action@main
+      continue-on-error: true
+      with:
+        format: sarif
+        outputFile: helm_results
+        files: "charts/cert-manager"         
+
+    - name: Upload Kubescape scan results to Github Code Scanning
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: helm_results.sarif  
+        category: "Kubescape scan for Helm Charts"
+
+    - name: Moving scan results to appropriate folders
+      run: |
+        TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
+        echo "Moving helm_results.sarif to reports/kubernetes-nsa-cisa-yaml-scan-analysis/helm_results_${TIMESTAMP}.sarif"
+        mv -f "helm_results.sarif" "reports/kubernetes-nsa-cisa-yaml-scan-analysis/helm_results_${TIMESTAMP}.sarif"
+
+
+    - name: Push changes to our repository
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git pull origin
+        git add charts/*
+        git add reports/*
+        git commit -m "added charts and scan results"
+        echo ${{ github.head_ref }}
+        git push origin ${{ github.head_ref }}
+      
