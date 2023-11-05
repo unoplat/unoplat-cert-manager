@@ -37,23 +37,23 @@ jobs:
       run: |
         cd charts/cert-manager
         cert_manager_repository=$(yq e '.image.repository' values.yaml)
-        cert_manager_tag=latest
+        cert_manager_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_IMAGE=$cert_manager_repository:$cert_manager_tag" >> $GITHUB_ENV
 
         cert_manager_webhook_repository=$(yq e '.webhook.image.repository' values.yaml)
-        cert_manager_webhook_tag=latest
+        cert_manager_webhook_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_WEBHOOK_IMAGE=$cert_manager_webhook_repository:$cert_manager_webhook_tag" >> $GITHUB_ENV
 
         cert_manager_cainjector_repository=$(yq e '.controller.image.repository' values.yaml)
-        cert_manager_cainjector_tag=latest
+        cert_manager_cainjector_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_CAINJECTOR_IMAGE=$cert_manager_cainjector:$cert_manager_cainjector_tag" >> $GITHUB_ENV
 
         cert_manager_acmesolver_repository=$(yq e '.acmesolver.image.repository' values.yaml)
-        cert_manager_acmesolver_tag=latest
+        cert_manager_acmesolver_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_ACME_SOLVER_IMAGE=$cert_manager_acmesolver_repository:$cert_manager_acmesolver_tag" >> $GITHUB_ENV
 
         startupapicheck_repository=$(yq e '.startupapicheck.image.repository' values.yaml)
-        startupapicheck_tag=latest
+        startupapicheck_tag=$(yq e '.appVersion' Chart.yaml)
         echo "STARTUP_API_CHECK_IMAGE=$startupapicheck_repository:$startupapicheck_tag" >> $GITHUB_ENV
 
     - name: Login to Github Container Registry
