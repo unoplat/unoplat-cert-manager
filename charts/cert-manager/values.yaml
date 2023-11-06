@@ -162,10 +162,10 @@ extraEnv: []
 # - name: SOME_VAR
 #   value: 'some value'
 
-resources: 
-  requests:
-    cpu: 300m
-    memory: 50Mi
+resources: {}
+  # requests:
+  #   cpu: 10m
+  #   memory: 32Mi
 
 # Pod Security Context
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -225,7 +225,7 @@ ingressShim: {}
 prometheus:
   enabled: true
   servicemonitor:
-    enabled: true
+    enabled: false
     prometheusInstance: default
     targetPort: 9402
     path: /metrics
