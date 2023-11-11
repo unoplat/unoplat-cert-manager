@@ -46,7 +46,7 @@ jobs:
 
         cert_manager_cainjector_repository=$(yq e '.cainjector.image.repository' values.yaml)
         cert_manager_cainjector_tag=$(yq e '.appVersion' Chart.yaml)
-        echo "CERT_MANAGER_CAINJECTOR_IMAGE=$cert_manager_cainjector:$cert_manager_cainjector_tag" >> $GITHUB_ENV
+        echo "CERT_MANAGER_CAINJECTOR_IMAGE=$cert_manager_cainjector_repository:$cert_manager_cainjector_tag" >> $GITHUB_ENV
 
         cert_manager_acmesolver_repository=$(yq e '.acmesolver.image.repository' values.yaml)
         cert_manager_acmesolver_tag=$(yq e '.appVersion' Chart.yaml)
