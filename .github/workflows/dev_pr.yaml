@@ -44,7 +44,7 @@ jobs:
         cert_manager_webhook_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_WEBHOOK_IMAGE=$cert_manager_webhook_repository:$cert_manager_webhook_tag" >> $GITHUB_ENV
 
-        cert_manager_cainjector_repository=$(yq e '.controller.image.repository' values.yaml)
+        cert_manager_cainjector_repository=$(yq e '.cainjector.image.repository' values.yaml)
         cert_manager_cainjector_tag=$(yq e '.appVersion' Chart.yaml)
         echo "CERT_MANAGER_CAINJECTOR_IMAGE=$cert_manager_cainjector:$cert_manager_cainjector_tag" >> $GITHUB_ENV
 
