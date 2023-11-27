@@ -1,7 +1,5 @@
 name: Develop Branch Action
 
-# todo: add container vulnerability scan
-
 on:
   pull_request_target:
     types: [opened]
@@ -23,6 +21,40 @@ jobs:
       uses: azure/setup-helm@v3
       with:
         version: v3.11.1
+    
+    - name: Login to Github Container Registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install yq
+      run: |
+        sudo snap install yq
+        
+    - name: Extract versions
+      run: |
+        cd charts/cert-manager
+        cert_manager_repository=$(yq e '.image.repository' values.yaml)
+        cert_manager_tag=$(yq e '.appVersion' Chart.yaml)
+        echo "CERT_MANAGER_IMAGE=$cert_manager_repository:$cert_manager_tag" >> $GITHUB_ENV
+
+        cert_manager_webhook_repository=$(yq e '.webhook.image.repository' values.yaml)
+        cert_manager_webhook_tag=$(yq e '.appVersion' Chart.yaml)
+        echo "CERT_MANAGER_WEBHOOK_IMAGE=$cert_manager_webhook_repository:$cert_manager_webhook_tag" >> $GITHUB_ENV
+
+        cert_manager_cainjector_repository=$(yq e '.cainjector.image.repository' values.yaml)
+        cert_manager_cainjector_tag=$(yq e '.appVersion' Chart.yaml)
+        echo "CERT_MANAGER_CAINJECTOR_IMAGE=$cert_manager_cainjector_repository:$cert_manager_cainjector_tag" >> $GITHUB_ENV
+
+        cert_manager_acmesolver_repository=$(yq e '.acmesolver.image.repository' values.yaml)
+        cert_manager_acmesolver_tag=$(yq e '.appVersion' Chart.yaml)
+        echo "CERT_MANAGER_ACME_SOLVER_IMAGE=$cert_manager_acmesolver_repository:$cert_manager_acmesolver_tag" >> $GITHUB_ENV
+
+        startupapicheck_repository=$(yq e '.startupapicheck.image.repository' values.yaml)
+        startupapicheck_tag=$(yq e '.appVersion' Chart.yaml)
+        echo "STARTUP_API_CHECK_IMAGE=$startupapicheck_repository:$startupapicheck_tag" >> $GITHUB_ENV
 
     - name: Login to Github Container Registry
       uses: docker/login-action@v2
@@ -30,7 +62,83 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
+    - name: Fetch cert manager images with specified tag
+      run: |
+        docker pull ${{ env.CERT_MANAGER_IMAGE }}
+        docker pull ${{ env.CERT_MANAGER_WEBHOOK_IMAGE }}
+        docker pull ${{ env.CERT_MANAGER_CAINJECTOR_IMAGE }}
+        docker pull ${{ env.CERT_MANAGER_ACME_SOLVER_IMAGE }}
+        docker pull ${{ env.STARTUP_API_CHECK_IMAGE }}
+            
+    - name: Run Trivy vulnerability scanner for cert_manager
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.CERT_MANAGER_IMAGE }}
+        format: 'sarif'
+        output: 'cert_manager.sarif'
+
+    - name: Upload Trivy scan results for cert_manager
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'cert_manager.sarif'
+        category: "Container scan for cert_manager"
+
+
+    - name: Run Trivy vulnerability scanner for cert_manager_webhook
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.CERT_MANAGER_WEBHOOK_IMAGE }}
+        format: 'sarif'
+        output: 'cert_manager_webhook.sarif'
+
+    - name: Upload Trivy scan results for cert_manager_webhook
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'cert_manager_webhook.sarif'
+        category: "Container scan for cert_manager_webhook"
+    
+    
+    - name: Run Trivy vulnerability scanner for cert_manager_cainjector
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.CERT_MANAGER_CAINJECTOR_IMAGE }}
+        format: 'sarif'
+        output: 'cert_manager_cainjector.sarif'
+
+    - name: Upload Trivy scan results for cert_manager_cainjector
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'cert_manager_cainjector.sarif'
+        category: "Container scan for cert_manager_cainjector"
+
+    
+    - name: Run Trivy vulnerability scanner for cert_manager_acmesolver
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.CERT_MANAGER_ACME_SOLVER_IMAGE }}
+        format: 'sarif'
+        output: 'cert_manager_acmesolver.sarif'
+
+    - name: Upload Trivy scan results for cert_manager_acmesolver
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'cert_manager_acmesolver.sarif'
+        category: "Container scan for cert_manager_acmesolver"
+
+    - name: Run Trivy vulnerability scanner for startup_api_check
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.STARTUP_API_CHECK_IMAGE }}
+        format: 'sarif'
+        output: 'startup_api_check.sarif'
+
+    - name: Upload Trivy scan results for startup_api_check
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'startup_api_check.sarif'
+        category: "Container scan for startup_api_check"
+
     - uses: kubescape/github-action@main
       continue-on-error: true
       with:
@@ -61,3 +169,4 @@ jobs:
         git commit -m "added charts and scan results"
         echo ${{ github.head_ref }}
         git push origin ${{ github.head_ref }}
+      
