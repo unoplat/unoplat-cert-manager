@@ -1,8 +1,8 @@
 # Scope
 
 ## Features
-- [] High Available
-- [] Observability - monitoring,alerting,logging
+- [ ] High Available
+- [ ] Observability - monitoring,alerting,logging
 
 
 ## DevSecOps
